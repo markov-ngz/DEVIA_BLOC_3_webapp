@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
+    "translation",
     "tailwind",
     "theme",
     'django_browser_reload'
