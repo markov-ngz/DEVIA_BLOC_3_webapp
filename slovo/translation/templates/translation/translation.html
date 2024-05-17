@@ -2,14 +2,17 @@
 {% load static %}
 {% block title %}  {% endblock %}
 {% block content %}
-<div>
+<div class="px-6 py-6 min-h-screen flex flex-col items-center ">
     <div class="flex">
-        <div class="p-6 flex flex-col items-center ">
-            {{ text }}
-            <form action="" method="post" class="border-amber-300 border-2 p-10 rounded-xl">
+        <form action="" method="post" class="  border-amber-300 border-2 rounded-xl  p-6 mu-6 mx-auto bg-gray-100 rounded-xl mt-10 ml-10 p-10  items-center ">
+            <div class=" rounded-xl flex">
+                <div class="w-1/2 ml-6">Tekst:</div>
+                <div class="w-1/2 ml-6">Tłumaczenie:</div>
+            </div>
+            <div class="flex mt-2">
                 {% csrf_token %}
-                <div class="space-y-4 ">
-                    {{ form.as_p }}
+                <div class="space-y-4 w-1/2 ">
+                    {{ form.text }}
                 </div>
                 {% if form.errors or form.non_field_errors %}
                     <div class="mb-3 p-6 bg-amber-100 rounded-xl">
@@ -19,14 +22,16 @@
                         {{ form.non_field_errors }}
                     </div>
                 {% endif %}
-                <div class=" flex justify-center ">
-                    <button class=" mt-6 py-4 px-8 text-lg bg-amber-500 hover:bg-amber-700 rounded-xl text-white"> Submit </button>
+                <div class="w-1/2 ml-6  h-full">
+                    <div class="sample-form px-6 rounded-xl py-4 px-6 ">
+                        {{translation}}
+                    </div>
                 </div>
-            </form>
-        </div>
-        <div>
-            {{translation}}
-        </div>
+            </div>
+            <div class="w-1/2 flex justify-end ">
+                <button class=" mt-6 py-4 px-8 text-lg bg-lime-500 bg-lime-700 rounded-xl text-white mr-10"> Składać </button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

@@ -2,6 +2,35 @@ body,h2{
   font-family: 'Tahoma',cursive;
 }
 
+.img-contain{
+  object-fit: contain;
+}
+.img-cover{
+  object-fit: cover;
+}
+.wawel {
+  background-image: url("images/wawel.jpg"); /* Replace with your image path */
+  background-repeat: no-repeat; /* Optional: controls how the image repeats */
+  background-position: center; /* Optional: controls the position of the image */
+  background-size: cover; /* Optional: controls how the image fills the element */
+  min-height: 800px;
+}
+.sample-form{
+  background-color: white;
+  height: 100px;
+}
+.mr-10{
+  margin-right: 10px;
+}
+.w-1\/6{
+  width: 16.6667%;
+}
+.bg-lime-500{
+  background-color: rgb(132 204 22);
+}
+.bg-lime-700:hover{
+  background-color: rgb(77 124 15);
+}
 .relative {
   position: relative;
 }
@@ -45,4 +74,9 @@ body,h2{
 .border-black{
   border-color: rgb(0 0 0);
   border-width: 2px;
+}
+.border-bred{
+  border-bottom: 2px solid;
+  border-color:  rgb(239 68 68);
+
 }

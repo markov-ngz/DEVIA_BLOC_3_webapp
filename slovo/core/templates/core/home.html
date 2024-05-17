@@ -2,9 +2,11 @@
 {% load static %}
 {% block title %}  {% endblock %}
 {% block content %}
-<div class="p-6 flex flex-col items-center">
-    <a href="#" class="mt-10 w-5/6">
-        <img src="{% static 'core/images/main_img.jpg'%}" alt="" class="rounded-xl h-5/6" title="Poznań">
-    </a>
+<div class="px-6 py-6 min-h-screen flex flex-col items-center ">  
+    <div class="p-6 flex flex-col items-center">
+        <a href="{% url 'translation:translate' %}" class="mt-10 w-5/6">
+            <img src="{% static 'core/images/main_img.jpg'%}" alt="" class="rounded-xl h-5/6" title="Poznań">
+        </a>
+    </div>          
 </div>
 {% endblock %}
