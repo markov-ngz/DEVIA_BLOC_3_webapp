@@ -33,13 +33,15 @@ def validate_and_call(form:TranslateForm,api_func)->dict:
     
     return translation
 
-def save_feedback(form:FeedbackForm, user:SimpleLazyObject)->None:
+def save_feedback(form:FeedbackForm,feedback:str, user:SimpleLazyObject)->None:
     """
     Save the feedback form into database
     """
     if form.is_valid() :
+        is_correct = True if feedback == 'Pozytywny' else False
+        print(is_correct)
         form_data = form.cleaned_data 
-        translation = Translation(text=form_data['text'],translation=form_data['translation'])
+        translation = Translation(text=form_data['text'],translation=form_data['translation'], is_correct=is_correct)
         translation.created_by = user
         try:
             translation.save()
@@ -62,8 +64,10 @@ def translate(request:WSGIRequest)->HttpResponse:
             return render(request,'translation/translation.html',{'form':second_form,'feedback':True})
         elif 'feedback' in request.POST :
             form = FeedbackForm(request.POST)
-            save_feedback(form,user)
-            return render(request,'translation/translation.html',{'form':form,'feedback':False})
+            feedback = request.POST['feedback']
+            print(feedback)
+            save_feedback(form,feedback, user)
+            return render(request,'translation/translation.html',{'form':form,'feedback':False,'thanks':True})
     else:
         form = TranslateForm()
         return render(request,'translation/translation.html',{'form':form,'feedback':False})

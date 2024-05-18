@@ -36,8 +36,12 @@
             {% if feedback %}
             <div class="w-1/2 flex justify-end ">
                 <p class="flex justify-center items-center mr-10"> Zadowolona ? </p>
-                <input name="feedback" type="submit" class=" mt-6 py-2 px-2  bg-blue-500 bg-blue-700 rounded-xl text-white mr-10" value="NOT OK" > 
-                <input name="feedback" type="submit" class=" mt-6 py-2 px-2 bg-orange-400 bg-blue-700 rounded-xl text-white mr-10" value="NOT OK" > 
+                <input name="feedback" type="submit" class=" mt-6 py-2 px-2  bg-blue-500 bg-blue-700 rounded-xl text-white mr-10" value="Pozytywny" > 
+                <input name="feedback" type="submit" class=" mt-6 py-2 px-2 bg-orange-400 bg-blue-700 rounded-xl text-white mr-10" value="Negatywny" > 
+            </div>
+            {% elif thanks %}
+            <div class="w-1/2 flex justify-center ">
+                <p class="flex justify-center items-center mr-10 font-semibold "> Dziękuję za udzielenie porady! &#128522;</p>
             </div>
             {% endif %}
         </form>
