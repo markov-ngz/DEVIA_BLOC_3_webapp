@@ -8,6 +8,22 @@ body,h2{
 .img-cover{
   object-fit: cover;
 }
+.bg-blue-500{
+  background-color: rgb(59 130 246);
+}
+.align-middle{
+  vertical-align: middle;
+  text-align: center;
+}
+.bg-blue-700:hover{
+  background-color: rgb(29 78 216);
+}
+.bg-orange-400{
+  background-color: rgb(251 146 60);
+}
+.bg-orange-400:hover{
+  background-color: rgb(234 88 12);
+}
 .wawel {
   background-image: url("images/wawel.jpg"); /* Replace with your image path */
   background-repeat: no-repeat; /* Optional: controls how the image repeats */
