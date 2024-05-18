@@ -19,21 +19,28 @@ logging.basicConfig(level=logging.INFO)
     
 # Create your views here.
 @csrf_protect
-# @login_required(login_url='/login')
+@login_required(login_url='/login')
 @require_http_methods(["POST","GET"])
 def translate(request):
+    translation= {"translation":""}
     if request.method == 'POST':
         form = TranslateForm(request.POST)
         if form.is_valid():
             text = form.cleaned_data
             translation = make_translation(text)
-
-            if translation['translation'].endswith('.'): # weird model interaction
-                translation['translation'] = translation['translation'][:-1]
+            print(translation != None)
+            if isinstance(translation,dict):
+                if translation['translation'].endswith('.'): # weird model interaction
+                    translation['translation'] = translation['translation'][:-1]
+                else:
+                    translation = {"translation":""}
         else:
-            translation = ""
+            translation = {"translation":""}
+        print("TRANSLATION VLAUE")
+        print(translation)
         return render(request,'translation/translation.html',{'form':form,"translation":translation['translation']})
     else:
-        translation= ""
+        translation= {"translation":""}
+        print(translation)
         form = TranslateForm()
-        return render(request,'translation/translation.html',{'form':form,"translation":translation})
+        return render(request,'translation/translation.html',{'form':form,"translation":translation['translation']})

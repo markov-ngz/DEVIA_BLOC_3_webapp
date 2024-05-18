@@ -44,7 +44,7 @@ def make_translation(payload:dict,attempts:int=3):
             headers = {"Authorization": f"Bearer {access_token['access_token']}"}
             try:
                 req = requests.post(TRANSLATE_URL,json=payload,headers=headers)
-                if req.status_code == 200:
+                if req.status_code == 200 :
                     return req.json()
                 else: 
                     return False
@@ -55,6 +55,8 @@ def make_translation(payload:dict,attempts:int=3):
                 access_token = get_access_token()
                 continue
         else:
+            if attempt == attempts:
+                return  False
             access_token = get_access_token()
             continue
 
