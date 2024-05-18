@@ -12,10 +12,9 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 @csrf_protect
-# @login_required(login_url='/login')
+@login_required(login_url='/login')
 @require_http_methods(["POST","GET"])
 def translate(request):
-    print(request.user)
     if request.method == 'POST' and ('translate' in request.POST or 'feedback' in request.POST):
         if 'translate' in request.POST :
             form = TranslateForm(request.POST)
@@ -37,6 +36,7 @@ def translate(request):
             if form.is_valid() :
                 form_data = form.cleaned_data 
                 translation = Translation(text=form_data['text'],translation=form_data['translation'])
+                translation.created_by = request.user
                 translation.save()
             return render(request,'translation/translation.html',{'form':form})
     else:

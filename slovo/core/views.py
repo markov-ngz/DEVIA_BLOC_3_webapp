@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_protect
 
 @require_http_methods(["GET"])
 def home(request):
+    print(request.user)
+
     return render(request,"core/home.html")
 
 @csrf_protect
