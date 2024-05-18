@@ -9,15 +9,9 @@ from datetime import datetime
 from .forms import TranslateForm
 from .translate import make_translation
 
-
-
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-
-    
-# Create your views here.
 @csrf_protect
 @login_required(login_url='/login')
 @require_http_methods(["POST","GET"])
@@ -28,12 +22,11 @@ def translate(request):
         if form.is_valid():
             text = form.cleaned_data
             translation = make_translation(text)
-            print(translation != None)
             if isinstance(translation,dict):
                 if translation['translation'].endswith('.'): # weird model interaction
                     translation['translation'] = translation['translation'][:-1]
-                else:
-                    translation = {"translation":""}
+            else:
+                translation = {"translation":""}
         else:
             translation = {"translation":""}
         print("TRANSLATION VLAUE")
