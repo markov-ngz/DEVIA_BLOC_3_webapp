@@ -37,6 +37,9 @@ jobs:
       DB_HOST: localhost
       DB_PORT: 5432
       SECRET_KEY: django-insecure-q$=7f6c=$gb4+8293%^ig)=4hva^+gujxdy2thu5(n0&*y5*eh
+      API_AI_USER: usertest@gmail.com
+      API_AI_PWD: password
+      API_AI_URL: http://localhost:8000
 
     steps:
 
