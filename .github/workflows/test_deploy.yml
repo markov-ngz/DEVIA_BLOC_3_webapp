@@ -12,17 +12,50 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.11]
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+    env:
+      DB_NAME: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: localhost
+      DB_PORT: 5432
+      SECRET_KEY: django-insecure-q$=7f6c=$gb4+8293%^ig)=4hva^+gujxdy2thu5(n0&*y5*eh
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
+
+    - uses: actions/checkout@v4 # checkout repo
+
+    - name: Set up Python ${{ matrix.python-version }} 
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Setup database
+      run: |
+        cd slovo
+        python manage.py migrate
+
     - name: Run Tests
       run: |
         cd slovo
