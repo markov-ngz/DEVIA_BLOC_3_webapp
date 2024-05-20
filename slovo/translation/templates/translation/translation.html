@@ -3,7 +3,10 @@
 {% block title %}  {% endblock %}
 {% block content %}
 <div class="px-6 py-6 min-h-screen flex flex-col items-center ">
-    <div class="border-amber-300 border-2 rounded-xl  p-6  bg-gray-100 rounded-xl mt-10 ml-10 ">
+    <div class="border-2 rounded-xl  p-6  bg-gray-100 rounded-xl mt-10 ml-10 ">
+        {% if error %}
+        <p class=" server-error rounded-xl  p-6 mu-6 mx-auto ">&#128531; Your demand could not be processed by our services. Servers might be going under maintenance. </p>
+        {% endif %}
         <form action="{% url 'translation:translate'%}" method="post" class="  border-amber-300 border-2 rounded-xl  p-6 mu-6 mx-auto bg-gray-100 rounded-xl ml-10 p-10  items-center">
             <div class=" rounded-xl flex">
                 <div class="w-1/2 ml-6">Tekst:</div>

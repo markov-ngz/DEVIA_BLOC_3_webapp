@@ -1,6 +1,9 @@
 body,h2{
   font-family: 'Tahoma',cursive;
 }
+.server-error{
+  background-color: rgb(252 165 165);
+}
 
 .img-contain{
   object-fit: contain;
@@ -94,5 +97,4 @@ body,h2{
 .border-bred{
   border-bottom: 2px solid;
   border-color:  rgb(239 68 68);
-
 }
