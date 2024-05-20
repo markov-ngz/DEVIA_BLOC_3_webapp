@@ -9,12 +9,15 @@ from .forms import SignupForm
 from .utils import get_client_browser, get_client_ip
 import logging
 from datetime import datetime
+from prom_exporter.views import COUNT_REQ
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
+
 @require_http_methods(["GET"])
 def home(request:WSGIRequest)->HttpResponse:
+    COUNT_REQ.inc()
     logger.info(f"{request.method} {request.get_full_path()} ; IP_CLIENT : {get_client_ip(request)} ; HTTP_SEC_CH_UA : { get_client_browser(request)}")
     return render(request,"core/home.html")
 
