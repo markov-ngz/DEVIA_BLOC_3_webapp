@@ -42,18 +42,32 @@ def call_api_ai(payload:dict,api_url:str,login_url:str,expected_status_code:int=
             try:
                 req = requests.post(api_url,json=payload,headers=headers)
                 if req.status_code == expected_status_code :
+
                     return req.json()
-                else: 
+                elif req.status_code == 403:
+                    if attempt == attempts:
+                        logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : Could not authenticate  \n Status code {req.status_code} ")
+                        return False
+                    else:
+                        logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}] : Failed to execute the request , attempt {str(attempt)} \n Trying to get new credentials")
+                        access_token = get_access_token(login_url)
+                        continue
+                else:
+                    logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : API call was not successfull \n Status code {req.status_code} ")
                     return False
             except RequestException as e:
                 if attempt == attempts:
+                    logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : Maximum attemps to execute the API call, User request could not be fulfilled \n Error : {str(e)}")
                     return  False
                 # get new token
+                logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}]: Failed to authenticate or execute the request , attempt {str(attempt)}, Trying to authenticate ")
                 access_token = get_access_token(login_url)
                 continue
         else:
             if attempt == attempts:
+                logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : Maximum attemps to execute the API call : authentication failed . User request could not be fulfilled")
                 return  False
+            logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}]: Failed to authenticate  , attempt {str(attempt)}, Trying to authenticate again ")
             access_token = get_access_token(login_url)
             continue
 
