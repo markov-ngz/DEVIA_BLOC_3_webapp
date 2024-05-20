@@ -3,3 +3,4 @@ web
 images
 .env
 migrations
+logs

@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path("",include("core.urls")),
+    path("",include("prom_exporter.urls")),
     path("translate/",include("translation.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

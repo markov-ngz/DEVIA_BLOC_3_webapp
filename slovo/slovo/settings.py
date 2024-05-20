@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "translation",
+    "prom_exporter",
     "tailwind",
     "theme",
     'django_browser_reload'
