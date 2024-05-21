@@ -26,8 +26,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Translation(View):
     
-    # def __init__(self) -> None:
-    #     super().__init__()
     api_ai_url=os.getenv('API_AI_URL')
     login_url = api_ai_url+"/login"
     translate_url = api_ai_url + "/translation"
