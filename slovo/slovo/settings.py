@@ -168,3 +168,6 @@ LOGGING = {
         },
     },
 }
+
+# Which url to redirect if login fails 
+LOGIN_URL = "/login"

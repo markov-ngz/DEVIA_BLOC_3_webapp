@@ -32,7 +32,6 @@ def validate_and_call(form:TranslateForm,api_func):
     """
     Validate the Translation form and call the API  to translate the text
     """
-    TIME_TRANSLATION ,SIZE_BYTES_OUT, SIZE_BYTES_IN 
     if form.is_valid() :
         text = {'text': form.cleaned_data['text']}
         # metrics 

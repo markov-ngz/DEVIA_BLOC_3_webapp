@@ -36,6 +36,7 @@ def call_api_ai(payload:dict,api_url:str,login_url:str,expected_status_code:int=
     
     # 1. Get access token 
     access_token = get_access_token(login_url)
+    
     # 2. Connect
     for attempt in range(attempts) :
         if access_token:
