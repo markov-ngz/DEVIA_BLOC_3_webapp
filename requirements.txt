@@ -4,3 +4,4 @@ django-browser-reload
 psycopg
 python-dotenv
 requests
+gunicorn

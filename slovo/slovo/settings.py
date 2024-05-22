@@ -13,9 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -31,8 +32,9 @@ INSTALLED_APPS = [
     "translation",
     "prom_exporter",
     "tailwind",
+    'django_browser_reload',
     "theme",
-    'django_browser_reload'
+    
 ]
 
 
@@ -72,6 +74,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 TAILWIND_APP_NAME = 'theme'
+TAILWIND_DEV_MODE = DEBUG
 NPM_BIN_PATH = "npm.cmd"
 
 
@@ -125,6 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
