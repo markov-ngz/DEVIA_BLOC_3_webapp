@@ -5,3 +5,4 @@ psycopg
 python-dotenv
 requests
 gunicorn
+prometheus-client
