@@ -14,7 +14,6 @@ from prom_exporter.views import COUNT_REQ, COUNT_HOME, COUNT_LOGOUT, COUNT_SIGNU
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
-
 @require_http_methods(["GET"])
 def home(request:WSGIRequest)->HttpResponse:
     COUNT_REQ.inc()
