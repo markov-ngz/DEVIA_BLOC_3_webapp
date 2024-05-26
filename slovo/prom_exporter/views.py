@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from prometheus_client import Counter, generate_latest , CollectorRegistry , Histogram
+import base64 , os
+
 registry = CollectorRegistry()
 NAMESPACE = "slovo" 
 
@@ -20,9 +22,20 @@ SIZE_BYTES_IN = Histogram('translation_size_bytes_in','In Request size (bytes)',
 SIZE_BYTES_OUT = Histogram('translation_size_bytes_out',' Out Request size (bytes)',namespace=NAMESPACE, registry=registry)
 SIZE_BYTES_GEN= Histogram('translation_size_bytes_gen','Generated Request size (bytes)',namespace=NAMESPACE, registry=registry)
 
+PROMETHEUS_PASSWORD = os.getenv("PROMETHEUS_PASSWORD")
+PROMETHEUS_USERNAME = os.getenv("PROMETHEUS_USERNAME")
+
 @require_http_methods(["GET"])
 def metrics(request):
-    response = HttpResponse("METRICS ",content_type='text/plain')
-    response.write(generate_latest(registry))
+    if 'Authorization' in request.headers:
+        basic_auth = request.headers['Authorization'][6:]
+        str_basic_auth = base64.b64decode(basic_auth).decode("utf-8")
+        username, password = str_basic_auth.split(":")
+        if username == PROMETHEUS_USERNAME and password == PROMETHEUS_PASSWORD:
+            response = HttpResponse(content_type='text/plain')
+            response.write(generate_latest(registry))
+            return response
+    response = HttpResponse()
+    response.status_code = 404 
     return response
 
