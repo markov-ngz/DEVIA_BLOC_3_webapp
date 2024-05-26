@@ -16,6 +16,7 @@ CREDENTIALS = {'username':os.getenv('API_AI_USER'),'password':os.getenv('API_AI_
 class ApiHandler():
 
     def __init__(self,credentials:dict,url:str,login_uri:str="/login") -> None:
+        
         self.url = url
         self.login_url = self.url + login_uri
         self.username = credentials['username']

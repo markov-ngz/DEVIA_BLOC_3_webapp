@@ -68,7 +68,7 @@ def save_feedback(payload:dict, user:SimpleLazyObject)->None:
     try:
         translation.save()
     except Exception as e :
-        logger.error(f"[{datetime.now()}] Error: could not save form data {str(e)}")
+        logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] Error: could not save form data {str(e)}")
 
 def send_feedback(form:FeedbackForm,feedback:str, user:SimpleLazyObject,api_func,feedback_url:str,login_url:str)->None:
     """
@@ -82,11 +82,11 @@ def send_feedback(form:FeedbackForm,feedback:str, user:SimpleLazyObject,api_func
         form_data['is_correct'] = is_correct
         response = api_func(form_data,feedback_url,login_url,201)
         if response:
-            logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] Successfully sent feedback ")
+            logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] Successfully sent feedback ")
         else:
-            logger.error(f"[{datetime.now().strftime("%H:%M:%S")}] Feedback could not be sent ")
+            logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] Feedback could not be sent ")
     else:
-        logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] Form data could not be validated for user {user.__str__()}")
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] Form data could not be validated for user {user.__str__()}")
 
 
 @csrf_protect

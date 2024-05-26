@@ -30,10 +30,10 @@ def signup(request:WSGIRequest)->HttpResponse:
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] New User saved")
+            logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] New User saved")
             return redirect('/login/')
         else:
-            logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] Invalid Form")
+            logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] Invalid Form")
     else:
         form = SignupForm()
 
@@ -48,5 +48,5 @@ def logout_view(request:WSGIRequest)->HttpResponse:
     COUNT_LOGOUT.inc()
     logger.info(f"{request.method} {request.get_full_path()} ; IP_CLIENT : {get_client_ip(request)} ; HTTP_SEC_CH_UA : { get_client_browser(request)}")
     logout(request)
-    logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] User succesfully logged out")
+    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] User succesfully logged out")
     return redirect('/')
