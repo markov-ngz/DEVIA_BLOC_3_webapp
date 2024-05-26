@@ -25,6 +25,7 @@ services:
     networks:
       net1:
         ipv4_address: 172.20.0.3
+    restart: always
 
 volumes:
   logs_webapp:
