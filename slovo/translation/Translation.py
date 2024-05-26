@@ -68,11 +68,11 @@ class Translation(View):
             form_data['is_correct'] = is_correct
             response = api_func(form_data,feedback_url,login_url,201)
             if response:
-                logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] Successfully sent feedback ")
+                logger.info(f" Successfully sent feedback ")
             else:
-                logger.error(f"[{datetime.now().strftime("%H:%M:%S")}] Feedback could not be sent ")
+                logger.error(f"Feedback could not be sent ")
         else:
-            logger.info(f"[{datetime.now().strftime("%H:%M:%S")}] Form data could not be validated for user {user.__str__()}")
+            logger.info(f"Form data could not be validated for user {user.__str__()}")
 
     def translate(self,form:TranslateForm,api_func):
         """
