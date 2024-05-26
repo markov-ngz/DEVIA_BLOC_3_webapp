@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     container_name: slovo
-    image: slovo:latest
+    image: markreduce/devia_titre:webapp
     volumes:
       - logs_webapp:/app/logs
     env_file:
