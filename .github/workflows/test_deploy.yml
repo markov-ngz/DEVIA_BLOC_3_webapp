@@ -39,6 +39,7 @@ jobs:
       API_AI_USER: usertest@gmail.com
       API_AI_PWD: password
       API_AI_URL: http://localhost:8000
+      DEBUG: True
 
     steps:
 
@@ -56,6 +57,7 @@ jobs:
     - name: Setup database
       run: |
         cd slovo
+        mkdir logs
         python manage.py migrate
 
     - name: Run Tests
