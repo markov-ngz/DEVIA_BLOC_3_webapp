@@ -13,15 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG =  os.getenv('DEBUG','') == 'True'
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -29,9 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "translation",
-    "tailwind",
-    "theme",
-    'django_browser_reload'
+    "prom_exporter"
 ]
 
 
@@ -43,7 +41,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "slovo.urls"
@@ -65,14 +63,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "slovo.wsgi.application"
-
-# django-tailwind settings 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-TAILWIND_APP_NAME = 'theme'
-NPM_BIN_PATH = "npm.cmd"
-
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -124,8 +114,50 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = os.path.join(BASE_DIR,'static','static')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# To log : 3 instances : handler(file + object+ formatter), logger( handler + log level ) , formatter ( how to write )
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/general.log",
+            "level": "DEBUG",
+            "formatter": "simple",
+        },
+    },
+    "loggers": {
+        "": {
+            "level": "DEBUG",
+            "handlers": ["file"],
+        },
+        "core.views": {
+            "level": "INFO",
+            "handlers": ["file"],
+        },
+        "translation.views": {
+            "level": "INFO",
+            "handlers": ["file"],
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {asctime}  {message}",
+            "style": "{",
+        },
+    },
+}
+
+# Which url to redirect if login fails 
+LOGIN_URL = "/login"
+

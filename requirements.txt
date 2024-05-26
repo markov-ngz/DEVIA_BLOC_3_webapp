@@ -1,6 +1,7 @@
 Django
-django-tailwind
-django-browser-reload
-psycopg
+psycopg2
 python-dotenv
 requests
+gunicorn
+prometheus-client
+whitenoise
