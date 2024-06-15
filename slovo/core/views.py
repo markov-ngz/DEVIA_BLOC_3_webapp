@@ -5,13 +5,13 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.core.handlers.wsgi import WSGIRequest
 from django.http.response import HttpResponse
-from .forms import SignupForm, UpdateUserForm, PasswordForm
+from .forms import SignupForm, UpdateUserForm, PasswordForm, LoginForm
 from .utils import get_client_browser, get_client_ip
 import logging
 from datetime import datetime
-
+from django.contrib.auth.models import User 
 from prom_exporter.views import COUNT_REQ, COUNT_HOME, COUNT_LOGOUT, COUNT_SIGNUP
-from translation.models import Translation
+from django.contrib.auth import authenticate, login
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -92,3 +92,17 @@ def delete_account(request):
         user.delete()
         return redirect("/")
     return render(request,'core/delete.html')
+
+def login_user(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            user = authenticate(request, username=data['username'], password=data['password'])
+            if user != None:
+                user.last_login = datetime.now()
+                user.save()
+                login(request,user=user)
+                return redirect("/")   
+
+    return render(request,'core/login.html',{'form':LoginForm})
