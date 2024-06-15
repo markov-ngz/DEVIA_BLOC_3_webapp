@@ -17,6 +17,22 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 @require_http_methods(["GET"])
+def about(request):
+    return render(request,"core/about.html")
+
+@require_http_methods(["GET"])
+def contact(request):
+    return render(request,"core/contact.html")
+
+@require_http_methods(["GET"])
+def privacy(request):
+    return render(request,"core/privacy.html")
+
+@require_http_methods(["GET"])
+def terms_of_use(request):
+    return render(request,"core/terms_of_use.html")
+
+@require_http_methods(["GET"])
 def home(request:WSGIRequest)->HttpResponse:
     COUNT_REQ.inc()
     COUNT_HOME.inc()

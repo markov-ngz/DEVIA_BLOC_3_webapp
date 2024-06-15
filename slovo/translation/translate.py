@@ -40,7 +40,9 @@ def call_api_ai(payload:dict,api_url:str,login_url:str,expected_status_code:int=
     # 2. Connect
     for attempt in range(attempts) :
         if access_token:
+            
             headers = {"Authorization": f"Bearer {access_token['access_token']}"}
+            
             try:
                 req = requests.post(api_url,json=payload,headers=headers)
                 if req.status_code == expected_status_code :
@@ -68,10 +70,12 @@ def call_api_ai(payload:dict,api_url:str,login_url:str,expected_status_code:int=
                 access_token = get_access_token(login_url)
                 continue
         else:
+            
             if attempt + 1  == attempts:
                 COUNT_REQ_FAILED.inc()
                 logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : Maximum attemps to execute the API call : authentication failed . User request could not be fulfilled")
                 return  False
+            
             logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}]: Failed to authenticate  , attempt {str(attempt)}, Trying to authenticate again ")
             access_token = get_access_token(login_url)
             continue

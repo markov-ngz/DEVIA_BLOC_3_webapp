@@ -18,7 +18,7 @@ from .utils import get_client_browser , get_client_ip
 from .translate import call_api_ai
 from .forms import TranslateForm, FeedbackForm
 from .models import Translation_stats
-
+from translation.ApiHandler import ApiHandler
 load_dotenv()
 
 logger = logging.getLogger(__name__)
@@ -31,6 +31,8 @@ class Translation(View):
     translate_url = api_ai_url + "/translation"
     feedback_url = api_ai_url + "/translation/feedback"
 
+    api_handler = ApiHandler(os.getenv('API_AI_URL'))
+    
     def get(self,request:WSGIRequest)->HttpResponse:
         form = TranslateForm()
         return render(request,'translation/translation.html',{'form':form,'feedback':False})
@@ -44,7 +46,7 @@ class Translation(View):
         if 'translate' in request.POST :
             COUNT_TRANSLATION.inc()
             form = TranslateForm(request.POST)
-            translation = self.translate(form,call_api_ai)
+            translation = self.translate(form)
             if translation['translation'] == '':
                 form = TranslateForm()
                 return render(request,'translation/translation.html',{'form':form,'feedback':False,'error':True})
@@ -57,7 +59,7 @@ class Translation(View):
             form = FeedbackForm(request.POST)
             feedback = request.POST['feedback']
             user_stats.count_feedbacks += 1
-            self.send_feedback(form,feedback, user,call_api_ai,self.feedback_url,self.login_url)
+            self.send_feedback(form,feedback, user)
             if feedback == 'Pozytywny':
                 user_stats.count_pos_feedbacks +=1
             else:
@@ -65,7 +67,7 @@ class Translation(View):
             user_stats.save()
             return render(request,'translation/translation.html',{'form':form,'feedback':False,'thanks':True})
         
-    def send_feedback(self,form:FeedbackForm,feedback:str, user:SimpleLazyObject,api_func,feedback_url:str,login_url:str)->None:
+    def send_feedback(self,form:FeedbackForm,feedback:str, user:SimpleLazyObject)->None:
         """
         Save the feedback form into database
         """
@@ -75,7 +77,7 @@ class Translation(View):
             COUNT_POSITIVE.inc() if is_correct else COUNT_NEGATIVE.inc()
             form_data = form.cleaned_data 
             form_data['is_correct'] = is_correct
-            response = api_func(form_data,feedback_url,login_url,201)
+            response = self.api_handler.call_api_ai(form_data,self.feedback_url)
             if response:
                 logger.info(f" Successfully sent feedback ")
             else:
@@ -83,7 +85,7 @@ class Translation(View):
         else:
             logger.info(f"Form data could not be validated for user {user.__str__()}")
 
-    def translate(self,form:TranslateForm,api_func):
+    def translate(self,form:TranslateForm):
         """
         Validate the Translation form and call the API  to translate the text
         """
@@ -95,7 +97,7 @@ class Translation(View):
 
             # make api call + metrics
             start = time.time()
-            response = api_func(text,self.translate_url, self.login_url)
+            response = self.api_handler.call_api_ai(text,self.translate_url)
             TIME_TRANSLATION.observe(time.time()- start )
 
             # instiate the dict for the response

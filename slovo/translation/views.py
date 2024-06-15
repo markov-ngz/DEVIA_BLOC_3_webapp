@@ -28,6 +28,13 @@ LOGIN_URL = API_AI_URL+"/login"
 TRANSLATE_URL = API_AI_URL + "/translation"
 FEEDBACK_URL = API_AI_URL + "/translation/feedback"
 
+@login_required
+def profil(request):
+    
+    user = request.user
+    user_stats = Translation_stats.objects.get_or_create(user_id= user)[0]
+    return render(request,'translation/profil.html',{"user_stats":user_stats,"user":user})
+
 def validate_and_call(form:TranslateForm,api_func):
     """
     Validate the Translation form and call the API  to translate the text

@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Profil{% endblock %}
+{% block content %}
+<div>
+    <p> Profil {{ user }} </p>
+    <p> Joined Date : {{ user.date_joined }}</p>
+    <p> Number of translation : {{ user_stats.count_translations}} </p>
+    <p> Nmber of feedbacks given : {{ user_stats.count_feedbacks}} </p>
+    <p> Number of positive feedbacks given : {{ user_stats.count_pos_feedbacks}} </p>
+    <p> Number of negative feedbacks : {{ user_stats.count_neg_feedbacks}} </p>
+    <p> Translation Grade :  {{ user_stats.grade_translation }} </p>
+    <p> Feedback Grade : {{ user_stats.grade_feedback }} </p>
+    
+</div>
+
+
+{% endblock %}

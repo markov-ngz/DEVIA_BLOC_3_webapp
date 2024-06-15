@@ -10,17 +10,17 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
-CREDENTIALS = {'username':os.getenv('API_AI_USER'),'password':os.getenv('API_AI_PWD')}
+credentials = {'username':os.getenv('API_AI_USER'),'password':os.getenv('API_AI_PWD')}
 
 
 class ApiHandler():
 
-    def __init__(self,credentials:dict,url:str,login_uri:str="/login") -> None:
+    def __init__(self,url:str,login_uri:str="/login") -> None:
         
         self.url = url
         self.login_url = self.url + login_uri
-        self.username = credentials['username']
-        self.password = credentials['password']
+        self.username = os.getenv('API_AI_USER')
+        self.password = os.getenv('API_AI_PWD')
         self.auth_form = {'username':self.username,'password':self.password}
         self.access_token = self.get_access_token()
 
@@ -33,7 +33,7 @@ class ApiHandler():
             response = requests.post(self.login_url,data=self.auth_form)
             if response.status_code == 200:
                 logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] : Successfully retrieved the JWT from the API ")
-                return response.json()
+                self.access_token =  response.json()
             else:
                 logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : Could not get the JWT from the API. Status_code = {response.status_code}  ")
                 return False
@@ -48,8 +48,9 @@ class ApiHandler():
             
         # 2. Connect
         for attempt in range(attempts) :
+
             if self.access_token:
-                headers = {"Authorization": f"Bearer {access_token['access_token']}"}
+                headers = {"Authorization": f"Bearer {self.access_token['access_token']}"}
                 try:
                     req = requests.post(api_url,json=payload,headers=headers)
                     if req.status_code == expected_status_code :
@@ -61,7 +62,7 @@ class ApiHandler():
                             return False
                         else:
                             logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}] : Failed to execute the request , attempt {str(attempt)} \n Trying to get new credentials")
-                            access_token = self.get_access_token()
+                            self.get_access_token()
                             continue
                     else:
                         COUNT_REQ_FAILED.inc()
@@ -74,7 +75,7 @@ class ApiHandler():
                         return  False
                     # get new token
                     logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}]: Failed to authenticate or execute the request , attempt {str(attempt)}, Trying to authenticate ")
-                    access_token = self.get_access_token()
+                    self.get_access_token()
                     continue
             else:
                 if attempt + 1  == attempts:
@@ -82,5 +83,5 @@ class ApiHandler():
                     logger.error(f"[{datetime.now().strftime('%H:%M:%S')}] : Maximum attemps to execute the API call : authentication failed . User request could not be fulfilled")
                     return  False
                 logger.warning(f"[{datetime.now().strftime('%H:%M:%S')}]: Failed to authenticate  , attempt {str(attempt)}, Trying to authenticate again ")
-                access_token = self.get_access_token()
+                self.get_access_token()
                 continue
