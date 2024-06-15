@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %} ustawienia {% endblock %}
+{% block content %}
+    {% if message %}
+    <p class=" server-error rounded-xl  p-6 mu-6 mx-auto ">&#128531; {{ message}} </p>
+    {% endif %}
+    <form action="{% url 'core:settings'%}" method="post" class="border-amber-300 border-2 rounded-xl  p-6 mu-6 mx-auto bg-gray-100 rounded-xl ml-10 p-10  items-center">
+        {% csrf_token %}
+        {{form }}
+        <div class="w-1/2 flex justify-end ">
+            <input name="email_username" type="submit" class=" mt-6 py-4 px-8 text-lg bg-lime-500 bg-lime-700 rounded-xl text-white mr-10" value="Składać"> 
+        </div>
+        {% if form.errors or form.non_field_errors %}
+        <div class="mb-3 p-6 bg-amber-100 rounded-xl">
+            {%for field in form %}
+                {{ field.errors}}
+            {% endfor %}
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+        {{ form_pwd}}
+        {% if form_pwd.errors or form_pwd.non_field_errors %}
+        <div class="mb-3 p-6 bg-amber-100 rounded-xl">
+            {%for field in form %}
+                {{ field.errors}}
+            {% endfor %}
+            {{ form_pwd.non_field_errors }}
+        </div>
+        {% endif %}
+        <div class="w-1/2 flex justify-end ">
+            <input name="password" type="submit" class=" mt-6 py-4 px-8 text-lg bg-lime-500 bg-lime-700 rounded-xl text-white mr-10" value="Składać"> 
+        </div>
+    </form>
+    <div>
+        <a href="{% url 'core:delete' %}" class="text-center w-1/4 px-3 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-red-700"> &#x1F5D1;&#xFE0F; Delete Account &#x1F5D1;&#xFE0F; </a>
+    </div>
+{% endblock %}

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder': 'Username',
@@ -34,3 +35,33 @@ class SignupForm(UserCreationForm):
         'placeholder': ' repeat password',
         'class':'w-full py-4 px-6 rounded-xl'
     }))
+
+class UpdateUserForm(forms.Form):
+
+    class Meta:
+       fields = ('username','email')
+
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Username',
+        'class':'w-full py-4 px-6 rounded-xl'
+    }))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'placeholder': 'Your email address',
+        'class':'w-full py-4 px-6 rounded-xl'
+    }))
+class PasswordForm(forms.Form):
+    class Meta:
+        fields = ('former_pwd','new_pwd','confirm_pwd')
+    former_pwd = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'password',
+        'class':'w-full py-4 px-6 rounded-xl'
+    }))  
+    new_pwd = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'password',
+        'class':'w-full py-4 px-6 rounded-xl'
+    }))
+    confirm_pwd = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': ' repeat password',
+        'class':'w-full py-4 px-6 rounded-xl'
+    }))
+

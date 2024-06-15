@@ -8,6 +8,6 @@ class Translation(models.Model):
     text = models.CharField(max_length=256)
     translation = models.CharField(max_length=256)
     is_correct = models.BooleanField()
-    created_by = models.ForeignKey(User, related_name='translations', on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, related_name='translations', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
