@@ -11,7 +11,7 @@ from django.utils.functional import SimpleLazyObject
 from django.core.handlers.wsgi import WSGIRequest
 from django.http.response import HttpResponse
 from dotenv import load_dotenv
-from .models import Translation
+from .models import Translation, Translation_stats
 from .forms import TranslateForm, FeedbackForm
 from .translate import call_api_ai
 from .utils import get_client_browser , get_client_ip

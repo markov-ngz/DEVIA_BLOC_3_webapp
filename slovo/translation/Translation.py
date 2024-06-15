@@ -17,7 +17,7 @@ from prom_exporter.views import COUNT_POSITIVE , COUNT_NEGATIVE, COUNT_REQ, COUN
 from .utils import get_client_browser , get_client_ip
 from .translate import call_api_ai
 from .forms import TranslateForm, FeedbackForm
-from .models import Translation
+from .models import Translation_stats
 
 load_dotenv()
 
@@ -35,10 +35,11 @@ class Translation(View):
         form = TranslateForm()
         return render(request,'translation/translation.html',{'form':form,'feedback':False})
     
-    @csrf_protect
+
     def post(self,request:WSGIRequest)->HttpResponse:
         logger.info(f"{request.method} {request.get_full_path()} ; IP_CLIENT : {get_client_ip(request)} ; HTTP_SEC_CH_UA : { get_client_browser(request)}")
         user = request.user
+        user_stats = Translation_stats.objects.get_or_create(user_id=user)[0]
         COUNT_REQ.inc()
         if 'translate' in request.POST :
             COUNT_TRANSLATION.inc()
@@ -48,15 +49,23 @@ class Translation(View):
                 form = TranslateForm()
                 return render(request,'translation/translation.html',{'form':form,'feedback':False,'error':True})
             second_form = FeedbackForm(translation)
+            user_stats.count_translations += 1
+            user_stats.save()
             return render(request,'translation/translation.html',{'form':second_form,'feedback':True})
         elif 'feedback' in request.POST :
             COUNT_FEEDBACK.inc()
             form = FeedbackForm(request.POST)
             feedback = request.POST['feedback']
+            user_stats.count_feedbacks += 1
             self.send_feedback(form,feedback, user,call_api_ai,self.feedback_url,self.login_url)
+            if feedback == 'Pozytywny':
+                user_stats.count_pos_feedbacks +=1
+            else:
+                user_stats.count_neg_feedbacks +=1 
+            user_stats.save()
             return render(request,'translation/translation.html',{'form':form,'feedback':False,'thanks':True})
         
-    def send_feedback(form:FeedbackForm,feedback:str, user:SimpleLazyObject,api_func,feedback_url:str,login_url:str)->None:
+    def send_feedback(self,form:FeedbackForm,feedback:str, user:SimpleLazyObject,api_func,feedback_url:str,login_url:str)->None:
         """
         Save the feedback form into database
         """
