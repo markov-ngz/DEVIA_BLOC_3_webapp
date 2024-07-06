@@ -36,18 +36,18 @@ documentation officielle : https://grafana.com/docs/grafana-cloud/connect-extern
 2. Dans les sources de données disponible, sélectionner "Prometheus"
 3. Spécifier les champs nécessaires ( Host, Authentication) , en local et comme grafana et prometheus sont sur le même réseau, on peut écrire en host ( résolution DNS interne) : 
 <br><br>
-<img src="grafana_host.jpg" width=50% > <br>
+<img src="grafana_host.JPG" width=50% > <br>
 
 #### 2.2.2 Créer un tableau de bord
 1. Dashboards > Selectionner le menu déroulant New  > New Dashboard
 2. Selectionner "Add visualization"
 3. Choisir la source de données correspondante
 4. Dans l'onglet "query" , sélectionner les métriques voulues et configurer des alias : <br> <br>
-<img src="grafana_metric.jpg" width=50%> <br>
+<img src="grafana_metric.JPG" width=50%> <br>
 5. Dans l'onglet "Transform Data", effectuer des opérations entre les métriques pour exploiter les résultats:
 <br><br>
-<img src="grafana_aggregation.jpg" width=50%> <br>
+<img src="grafana_aggregation.JPG" width=50%> <br>
 
 <h2>Exemple de résultat : </h2>
 <br><br>
-<img src="grafana_dash.jpg" width=75%> <br>
+<img src="grafana_dash.JPG" width=75%> <br>
