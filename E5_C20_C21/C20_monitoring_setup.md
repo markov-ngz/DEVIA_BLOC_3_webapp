@@ -16,15 +16,38 @@
 ## 2. Configuration des applications
 
 ### 2.1 Prometheus 
-Vérifier la bonne configuration de Prometheus avec l'application : 
-nom d'utilisateur par défaut :  <br>
-mot de passe par défaut :   
+1. Vérifier la bonne configuration de Prometheus avec l'application : </br>
+</br>
+<img src="prometheus_targets.JPG" width=500px >
+</br>
+</br>
 
-Les métriques de votre application doivent pour voir être visualisées comme telle : 
-
+2. Les métriques de votre application doivent pour voir être visualisées comme telles : 
+</br>
+</br>
+<img src="prometheus_simple_metric.JPG" width=500px>
+</br>
 
 ### 2.2 Grafana 
-admin mot de passe
-lien avec prometheus 
-lien avec docker
-tableau de bord
+
+documentation officielle : https://grafana.com/docs/grafana-cloud/connect-externally-hosted/existing-datasource/ 
+#### 2.2.1 Lier avec Prometheus
+1. Barre latérale > Connections > Add new connection 
+2. Dans les sources de données disponible, sélectionner "Prometheus"
+3. Spécifier les champs nécessaires ( Host, Authentication) , en local et comme grafana et prometheus sont sur le même réseau, on peut écrire en host ( résolution DNS interne) : 
+<br><br>
+<img src="grafana_host.jpg" width=50% > <br>
+
+#### 2.2.2 Créer un tableau de bord
+1. Dashboards > Selectionner le menu déroulant New  > New Dashboard
+2. Selectionner "Add visualization"
+3. Choisir la source de données correspondante
+4. Dans l'onglet "query" , sélectionner les métriques voulues et configurer des alias : <br> <br>
+<img src="grafana_metric.jpg" width=50%> <br>
+5. Dans l'onglet "Transform Data", effectuer des opérations entre les métriques pour exploiter les résultats:
+<br><br>
+<img src="grafana_aggregation.jpg" width=50%> <br>
+
+<h2>Exemple de résultat : </h2>
+<br><br>
+<img src="grafana_dash.jpg" width=75%> <br>
