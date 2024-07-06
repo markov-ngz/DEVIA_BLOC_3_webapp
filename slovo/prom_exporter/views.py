@@ -27,15 +27,20 @@ PROMETHEUS_USERNAME = os.getenv("PROMETHEUS_USERNAME")
 
 @require_http_methods(["GET"])
 def metrics(request):
+    prom_user = PROMETHEUS_USERNAME
+    prom_pwd = PROMETHEUS_PASSWORD
     if 'Authorization' in request.headers:
+        # remove Basic key word 
         basic_auth = request.headers['Authorization'][6:]
+
         str_basic_auth = base64.b64decode(basic_auth).decode("utf-8")
         username, password = str_basic_auth.split(":")
-        if username == PROMETHEUS_USERNAME and password == PROMETHEUS_PASSWORD:
+ 
+        if username == prom_user and password == prom_pwd:
             response = HttpResponse(content_type='text/plain')
             response.write(generate_latest(registry))
             return response
     response = HttpResponse()
-    response.status_code = 404 
+    response.status_code = 404 # do not want the user to know anything 
     return response
 

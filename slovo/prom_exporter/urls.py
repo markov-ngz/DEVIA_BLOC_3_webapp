@@ -4,5 +4,5 @@ from . import views
 app_name = 'prom_exporter'
 
 urlpatterns = [
-    path("metrics",views.metrics, name="metrics"),
+    path("metrics/",views.metrics, name="metrics"),
 ]

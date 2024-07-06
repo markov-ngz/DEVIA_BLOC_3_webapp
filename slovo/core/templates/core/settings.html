@@ -19,6 +19,10 @@
             {{ form.non_field_errors }}
         </div>
         {% endif %}
+    </form>
+    
+    <form action="{% url 'core:settings'%}" method="post" class="border-amber-300 border-2 rounded-xl  p-6 mu-6 mx-auto bg-gray-100 rounded-xl ml-10 p-10  items-center">
+        {% csrf_token %}
         {{ form_pwd}}
         {% if form_pwd.errors or form_pwd.non_field_errors %}
         <div class="mb-3 p-6 bg-amber-100 rounded-xl">

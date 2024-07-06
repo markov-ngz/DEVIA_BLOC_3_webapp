@@ -69,6 +69,14 @@ def logout_view(request:WSGIRequest)->HttpResponse:
     logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] User succesfully logged out")
     return redirect('/')
 
+def credentials_taken(username:str,email:str,user_pk:int)->bool:
+    """
+    Check if the credentials already exists in base 
+    """
+    if User.objects.exclude(pk=user_pk).filter(username=username).exists() or  User.objects.exclude(pk=user_pk).filter(email=email).exists() :
+
+        return True 
+    return False 
 @login_required
 def settings(request:WSGIRequest)->HttpResponse:
     user = request.user
@@ -77,20 +85,25 @@ def settings(request:WSGIRequest)->HttpResponse:
         if 'email_username' in request.POST:
             form = UpdateUserForm(request.POST)
             if form.is_valid():
-                user.username = form.cleaned_data['username']
-                user.email =  form.cleaned_data['email']
-                user.save()
-                return redirect('/logout')
+                new_username = form.cleaned_data['username']
+                new_email = form.cleaned_data["email"]
+                if not credentials_taken(new_username,new_email,user.id) :
+   
+                    user.username = new_username
+                    user.email = new_email
+                    user.save()
+                    return redirect('/logout')
+                else : 
+                    message = "Credentials are already taken "
         elif 'password' in request.POST : 
             form_pwd = PasswordForm(request.POST)
-            print(form_pwd.is_valid())
             if form_pwd.is_valid():
                 data = form_pwd.cleaned_data
                 if user.check_password(data['former_pwd']):
                     if data['confirm_pwd'] == data['new_pwd']:
                         user.set_password(data['new_pwd'])
                         user.save()
-                        return redirect('/logout')
+                        return redirect('/')
                     else : 
                         message = "new password and its confirmation do not match"
                         # display error message 'new password and its confirmation do not match'

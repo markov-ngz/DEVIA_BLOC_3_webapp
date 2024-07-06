@@ -1,21 +1,15 @@
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from dotenv import load_dotenv
 from django.http.response import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
 from django.utils.functional import SimpleLazyObject
 from django.core.handlers.wsgi import WSGIRequest
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 import logging
 import os
 import time
 import sys
-from datetime import datetime
 from prom_exporter.views import COUNT_POSITIVE , COUNT_NEGATIVE, COUNT_REQ, COUNT_TRANSLATION , COUNT_FEEDBACK , TIME_TRANSLATION ,SIZE_BYTES_OUT, SIZE_BYTES_IN 
 from .utils import get_client_browser , get_client_ip
-from .translate import call_api_ai
 from .forms import TranslateForm, FeedbackForm
 from .models import Translation_stats
 from translation.ApiHandler import ApiHandler
@@ -30,7 +24,7 @@ class Translation(View):
     login_url = api_ai_url+"/login"
     translate_url = api_ai_url + "/translation"
     feedback_url = api_ai_url + "/translation/feedback"
-
+    pos_feedback = 'Pozytywny'
     api_handler = ApiHandler(os.getenv('API_AI_URL'))
     
     def get(self,request:WSGIRequest)->HttpResponse:
@@ -46,26 +40,30 @@ class Translation(View):
         if 'translate' in request.POST :
             COUNT_TRANSLATION.inc()
             form = TranslateForm(request.POST)
-            translation = self.translate(form)
-            if translation['translation'] == '':
-                form = TranslateForm()
-                return render(request,'translation/translation.html',{'form':form,'feedback':False,'error':True})
-            second_form = FeedbackForm(translation)
-            user_stats.count_translations += 1
-            user_stats.save()
-            return render(request,'translation/translation.html',{'form':second_form,'feedback':True})
+            if form.is_valid():
+                translation = self.translate(form)
+                if translation['translation'] == '':
+                    form = TranslateForm()
+                    return render(request,'translation/translation.html',{'form':form,'feedback':False,'error':True})
+                second_form = FeedbackForm(translation)
+                user_stats.count_translations += 1
+                user_stats.save()
+                return render(request,'translation/translation.html',{'form':second_form,'feedback':True})
         elif 'feedback' in request.POST :
             COUNT_FEEDBACK.inc()
             form = FeedbackForm(request.POST)
-            feedback = request.POST['feedback']
-            user_stats.count_feedbacks += 1
-            self.send_feedback(form,feedback, user)
-            if feedback == 'Pozytywny':
-                user_stats.count_pos_feedbacks +=1
-            else:
-                user_stats.count_neg_feedbacks +=1 
-            user_stats.save()
-            return render(request,'translation/translation.html',{'form':form,'feedback':False,'thanks':True})
+            if form.is_valid():
+                feedback = request.POST['feedback']
+                user_stats.count_feedbacks += 1
+                self.send_feedback(form,feedback, user)
+                if feedback == self.pos_feedback:
+                    user_stats.count_pos_feedbacks +=1
+                else:
+                    user_stats.count_neg_feedbacks +=1 
+                user_stats.save()
+                return render(request,'translation/translation.html',{'form':form,'feedback':False,'thanks':True})
+            
+        return redirect("/translate")
         
     def send_feedback(self,form:FeedbackForm,feedback:str, user:SimpleLazyObject)->None:
         """
