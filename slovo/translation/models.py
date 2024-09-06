@@ -33,7 +33,8 @@ class Translation_stats(models.Model):
             return 'master'
         elif self.count_feedbacks > 30:
             return 'grandmaster'
-# Create your models here.
+# ---- DEPRECATED ----
+
 class Translation(models.Model):
 
     text = models.CharField(max_length=256)
