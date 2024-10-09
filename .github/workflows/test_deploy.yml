@@ -38,6 +38,8 @@ jobs:
       DEBUG: True
 
     steps:
+
+    - uses: actions/checkout@v4 # import code to the current directory
     
     - name: Mock test the API translation
       uses: markov-ngz/DEVIA_mock-api-action@v1
