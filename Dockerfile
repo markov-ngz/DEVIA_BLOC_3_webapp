@@ -23,6 +23,8 @@ WORKDIR /app
 
 COPY ./entrypoint.sh /
 
+RUN sed -i 's/\r//g' /entrypoint.sh
+
 RUN chmod +x /entrypoint.sh
 
 RUN mkdir -p logs \
@@ -30,7 +32,8 @@ RUN mkdir -p logs \
     && chmod -R 755 logs \
     && mkdir -p static \
     && chown -R appuser:appgroup static \ 
-    && chmod -R 755 static
+    && chmod -R 755 static \
+    && chmod -R 777 translation
 
 USER appuser 
 
