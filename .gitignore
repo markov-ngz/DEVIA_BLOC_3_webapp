@@ -6,3 +6,4 @@ logs
 .dev.env 
 .prom_pwd
 *.log
+.coverage
